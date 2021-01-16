@@ -106,4 +106,4 @@ client.on('message', message => {
   }
 })
 
-client.login("ODAwMDQzODI0Mzk5MTIyNDQz.YAMY3w.G9xypn5SJlZ8gL5U8kvG1pnG0K4")
+client.login("INSERT TOKEN HERE")
