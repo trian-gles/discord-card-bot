@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const pre_decks = require('./preset_decks.json');
 
 var decks = {};
 
@@ -22,9 +23,9 @@ function Deck(id) {
 
   this.drawCard = function() {
     if (deckCards.length > 0) {
-    let drawnCard = deckCards.shift();
-    spentCards.unshift(drawnCard);
-    return drawnCard
+      let drawnCard = deckCards.shift();
+      spentCards.unshift(drawnCard);
+      return drawnCard
     }
   }
 
@@ -49,6 +50,7 @@ const ADDREG = /^add\s/i;
 const DRAWREG = /^draw/i;
 const SHUFFLEREG = /^shuffle/i;
 const RESETREG = /^reset/i;
+const LOADREG = /^load\s/i;
 
 const NEWCARDSREG = /".+?"/g;
 
@@ -99,8 +101,20 @@ client.on('message', message => {
         decks[message.guild.id].reset();
         message.channel.send("Resetting deck");
       }
+
+      else if (LOADREG.test(card_cmd)){
+        let desired_deck = card_cmd.replace(LOADREG, "");
+        if (pre_decks.hasOwnProperty(desired_deck)) {
+          decks[message.guild.id].addCards(pre_decks[desired_deck])
+          message.channel.send(`Adding preset deck ${desired_deck}`)
+        }
+        else {
+          message.channel.send(`${desired_deck} is not a preset deck`)
+        }
+      }
+
       else {
-        message.channel.send(`Invalid command "${card_cmd}"`)
+        message.channel.send(`Invalid command "${card_cmd}"`);
       }
     }
   }
